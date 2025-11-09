@@ -16,8 +16,9 @@ contract BankAccount {
     }
 
     // Deposit money
-    function deposit() public payable {
+    function deposit(uint256 amount) public payable {
         require(isUser[msg.sender], "Account not found");
+        require(msg.value == amount, "msg.value must equal amount");
         require(msg.value > 0, "Deposit must be > 0");
         balances[msg.sender] += msg.value;
         emit Deposit(msg.sender, msg.value);
@@ -41,4 +42,5 @@ contract BankAccount {
         require(isUser[msg.sender], "Account not found");
         return balances[msg.sender];
     }
+
 }
