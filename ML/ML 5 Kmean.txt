@@ -1,0 +1,45 @@
+import numpy as np
+import pandas as pd
+data = pd.read_csv('sales_data_sample.csv',encoding='latin1')
+data.head()
+data.tail()
+data.info()
+data.isnull().sum()
+data= data.drop(columns=['ORDERNUMBER','ORDERDATE','ADDRESSLINE1','CUSTOMERNAME','PHONE','ADDRESSLINE2','CONTACTLASTNAME','CONTACTFIRSTNAME'])
+data.head()
+data.tail()
+data.isnull().sum()
+data = data.drop(columns=['QTR_ID','MONTH_ID','STATE','POSTALCODE','TERRITORY'])
+data
+data.duplicated().sum()
+
+from sklearn.preprocessing import LabelEncoder
+en = LabelEncoder()
+
+data['STATUS']=en.fit_transform(data['STATUS'])
+data['PRODUCTLINE']=en.fit_transform(data['PRODUCTLINE'])
+data['PRODUCTCODE']=en.fit_transform(data['PRODUCTCODE'])
+data['CITY']=en.fit_transform(data['CITY'])
+data['COUNTRY']=en.fit_transform(data['COUNTRY'])
+data['DEALSIZE']=en.fit_transform(data['DEALSIZE'])
+
+data
+
+from sklearn.cluster import KMeans
+
+wc = []
+for i in range(1,21):
+    km = KMeans(n_clusters=i)
+    km.fit_predict(data)
+    wc.append(km.inertia_)
+
+wc
+
+import matplotlib.pyplot as plt
+plt.plot(wc)
+
+km = KMeans(n_clusters=4)
+pred = km.fit_predict(data)
+
+data['label']=pred
+data
